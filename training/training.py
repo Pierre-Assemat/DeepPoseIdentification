@@ -38,29 +38,29 @@ class Training():
 			pickle.dump([self.X_test, self.y_test] , f, 2)
 
 
-	def buildDNN(self, hidden_layers=5):
+	def buildDNN(self, hidden_layers=2):
 		'''Building the architecture of the network (perceptron)
 		Input: number of hidden layers
 		'''
 		self.classifier = Sequential()
 
 		# First Layer
-		self.classifier.add(Dense(54, kernel_regularizer=l2(0.0007), bias_regularizer=l2(0.0007), activation='tanh', kernel_constraint=unit_norm(), kernel_initializer='random_normal', input_dim=54))
-		self.classifier.add(Dropout(0.08))
+		self.classifier.add(Dense(54, kernel_regularizer=l2(0.0001), bias_regularizer=l2(0.0007), activation='tanh', kernel_constraint=unit_norm(), kernel_initializer='random_normal', input_dim=54))
+		self.classifier.add(Dropout(0.8))
 
 		# Hidden Layer(s)
 		for nbLayer in range(hidden_layers - 1):
-			self.classifier.add(Dense(54, kernel_regularizer=l2(0.0007), bias_regularizer=l2(0.0007), activation='tanh', kernel_initializer='random_normal'))
-			self.classifier.add(Dropout(0.08))
+			self.classifier.add(Dense(54, kernel_regularizer=l2(0.0001), bias_regularizer=l2(0.0007), activation='tanh', kernel_initializer='random_normal'))
+			self.classifier.add(Dropout(0.8))
 
 		# Output Layer
 		self.classifier.add(Dense(1, activation='sigmoid', kernel_initializer='random_normal'))
 
-		try:
-			# load weights
-			self.classifier.load_weights("weights.best.hdf5")
-		except e:
-			pass
+		#try:
+			#load weights
+		#	self.classifier.load_weights("weights.best.hdf5")
+		#except e:
+		#	pass
 
 		# Optimizer
 		adam = optimizers.Adam(lr=0.001)
@@ -93,7 +93,7 @@ class Training():
 
 		# serialize weights to HDF5
 		self.classifier.save_weights("model.h5")
-		print("\nModel trained and saved as 'model.json', 'model.h5' and 'weights.best.hdf5'")
+		print("\nModel train and saved as 'model.json' and 'model.h5'")
 
 
 	def plot_acc(self, all=None):
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     # Get argument parser
     parser = argparse.ArgumentParser(description='Chain of focus detection using human pose detection')
     parser.add_argument('--path', type=str, default="./openPoseDataset.pkl", help='Path to input dataset pickle file')
-    parser.add_argument('--epochNb', type=int, default=1000, help='Number of epoch wanted to train the NN')
+    parser.add_argument('--epochNb', type=int, default=500, help='Number of epoch wanted to train the NN')
     parser.add_argument('--layerNb', type=int, default=5, help='Number of hidden layers')
     args = parser.parse_args()
 
